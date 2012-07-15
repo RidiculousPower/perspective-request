@@ -1,32 +1,7 @@
 
-module ::Magnets::Request::Interface
+module ::Magnets::Request::Path
   
   include ::CascadingConfiguration::Array::Sorted::Unique
-
-	################
-  #  initialize  #
-  ################
-  
-  def initialize( rack_request )
-    
-    @rack_request = rack_request
-    
-    @request_path = ::Magnets::Path::RequestPath.new( rack_request.path_info )
-    
-  end
-
-	##################
-	#  rack_request  #
-  #  request_path  #
-  ##################
-
-  attr_reader :rack_request, :request_path
-  
-	##########
-  #  path  #
-  ##########
-  
-  alias_method :path, :request_path
   
 	################
   #  uri_schema  #
@@ -34,7 +9,7 @@ module ::Magnets::Request::Interface
 
   # http, https, etc.
   # 
-  attr_configuration_sorted_unique_array :uri_schema do
+  attr_sorted_unique_array :uri_schema do
 		
 		#=================#
     #  pre_set_hooks  #
@@ -62,7 +37,7 @@ module ::Magnets::Request::Interface
   
   # GET, PUT, POST, DELETE
   #
-  attr_configuration_sorted_unique_array :request_method do
+  attr_sorted_unique_array :request_method do
 		
 		#=================#
     #  pre_set_hooks  #
@@ -221,7 +196,7 @@ module ::Magnets::Request::Interface
   #  hosts  #
   ###########
 
-  attr_configuration_sorted_unique_array :hosts
+  attr_sorted_unique_array :hosts
 
 	########
   #  ip  #
@@ -239,7 +214,7 @@ module ::Magnets::Request::Interface
   #  ips  #
   #########
 
-  attr_configuration_sorted_unique_array :ips
+  attr_sorted_unique_array :ips
 	
 	##########
   #  port  #
@@ -257,7 +232,7 @@ module ::Magnets::Request::Interface
   #  ports  #
   ###########
 
-  attr_configuration_sorted_unique_array :ports
+  attr_sorted_unique_array :ports
 
 	#############
   #  referer  #
@@ -275,7 +250,7 @@ module ::Magnets::Request::Interface
   #  referers  #
   ##############
 
-  attr_configuration_sorted_unique_array :referers
+  attr_sorted_unique_array :referers
 	
 	################
   #  user_agent  #
@@ -293,6 +268,6 @@ module ::Magnets::Request::Interface
   #  user_agents  #
   #################
 
-  attr_configuration_sorted_unique_array :user_agents
-  
+  attr_sorted_unique_array :user_agents
+
 end

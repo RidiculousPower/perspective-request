@@ -1,5 +1,5 @@
 
-require_relative '../../../lib/magnets-path.rb'
+require_relative '../../lib/magnets-request.rb'
 
 describe ::Magnets::Request do
 
@@ -45,9 +45,9 @@ describe ::Magnets::Request do
 
   it 'can specify a scheme (ie. http, https); default is http' do
     ::Magnets::Path.new( :name ).instance_eval do
-      schemes.include?( 'http' )
-      scheme( 'https' )
-      schemes.include?( 'https' )
+      uri_schema.include?( 'http' )
+      uri_schema.push( 'https' )
+      uri_schema.include?( 'https' )
     end
   end
 
@@ -57,52 +57,58 @@ describe ::Magnets::Request do
 
   it 'can specify one or more schemes (ie. GET/PUT/POST/DELETE); default is [ GET, PUT, POST, DELETE ]' do
     ::Magnets::Path.new( :name ).instance_eval do
-      request_methods.include?( :GET ).should == false
-      request_methods.include?( :PUT ).should == false
-      request_methods.include?( :POST ).should == false
-      request_methods.include?( :DELETE ).should == false
+      request_method.include?( :GET ).should == false
+      request_method.include?( :PUT ).should == false
+      request_method.include?( :POST ).should == false
+      request_method.include?( :DELETE ).should == false
 
-      request_method( :GET )
-      request_methods.include?( :GET ).should == true
-      request_methods.should == [ :GET ]
-      request_methods.delete( :GET )
-      request_methods.include?( :GET ).should == false
-      request_method( :get )
-      request_methods.include?( :GET ).should == true
-      request_methods.should == [ :GET ]
+      request_method.get
+      request_method.include?( :GET ).should == true
+      request_method.should == [ :GET ]
+      request_method.minus_get
+      request_method.include?( :GET ).should == false
+      request_method.get
+      request_method.include?( :GET ).should == true
+      request_method.should == [ :GET ]
 
-      request_method( :PUT )
-      request_methods.include?( :PUT ).should == true
-      request_methods.should == [ :GET, :PUT ]
-      request_methods.delete( :PUT )
-      request_methods.include?( :PUT ).should == false
-      request_method( :put )
-      request_methods.include?( :PUT ).should == true
-      request_methods.should == [ :GET, :PUT ]
+      request_method.put
+      request_method.include?( :PUT ).should == true
+      request_method.should == [ :GET, :PUT ]
+      request_method.minus_put
+      request_method.include?( :PUT ).should == false
+      request_method.put
+      request_method.include?( :PUT ).should == true
+      request_method.should == [ :GET, :PUT ]
 
-      request_method( :POST )
-      request_methods.include?( :POST ).should == true
-      request_methods.should == [ :GET, :PUT, :POST ]
-      request_methods.delete( :POST )
-      request_methods.include?( :POST ).should == false
-      request_method( :post )
-      request_methods.include?( :POST ).should == true
-      request_methods.should == [ :GET, :PUT, :POST ]
+      request_method.post
+      request_method.include?( :POST ).should == true
+      request_method.should == [ :GET, :POST, :PUT ]
+      request_method.minus_post
+      request_method.include?( :POST ).should == false
+      request_method.post
+      request_method.include?( :POST ).should == true
+      request_method.should == [ :GET, :POST, :PUT ]
 
-      request_method( :DELETE )
-      request_methods.include?( :DELETE ).should == true
-      request_methods.should == [ :GET, :PUT, :POST, :DELETE ]
-      request_methods.delete( :DELETE )
-      request_methods.include?( :DELETE ).should == false
-      request_method( :delete )
-      request_methods.include?( :DELETE ).should == true
-      request_methods.should == [ :GET, :PUT, :POST, :DELETE ]
+      request_method.delete
+      request_method.include?( :DELETE ).should == true
+      request_method.should == [ :DELETE, :GET, :POST, :PUT ]
+      request_method.minus_delete
+      request_method.include?( :DELETE ).should == false
+      request_method.delete
+      request_method.include?( :DELETE ).should == true
+      request_method.should == [ :DELETE, :GET, :POST, :PUT ]
 
-      request_method( [ :GET, :PUT ] )
-      request_methods.should == [ :GET, :PUT ]
+      request_method.minus_get
+      request_method.minus_put
+      request_method.minus_post
+      request_method.minus_delete
 
-      request_method( [ :POST, :PUT ] )
-      request_methods.should == [ :POST, :PUT ]
+      request_method.get.put
+      request_method.should == [ :GET, :PUT ]
+      request_method.minus_get.minus_put
+
+      request_method.post.put
+      request_method.should == [ :POST, :PUT ]
 
     end
   end
@@ -112,7 +118,7 @@ describe ::Magnets::Request do
   #########
 
   it 'can specify GET' do
-    ::Magnets::Path.new( :name ).get.request_methods.should == [ :GET ]
+    ::Magnets::Path.new( :name ).request_method.get.should == [ :GET ]
   end
 
 	#########
@@ -120,7 +126,7 @@ describe ::Magnets::Request do
   #########
 
   it 'can specify PUT' do
-    ::Magnets::Path.new( :name ).put.request_methods.should == [ :PUT ]
+    ::Magnets::Path.new( :name ).request_method.put.should == [ :PUT ]
   end
 
 	##########
@@ -128,7 +134,7 @@ describe ::Magnets::Request do
   ##########
 
   it 'can specify POST' do
-    ::Magnets::Path.new( :name ).post.request_methods.should == [ :POST ]
+    ::Magnets::Path.new( :name ).request_method.post.should == [ :POST ]
   end
 
 	############
@@ -136,27 +142,9 @@ describe ::Magnets::Request do
   ############
 
   it 'can specify DELETE' do
-    ::Magnets::Path.new( :name ).delete.request_methods.should == [ :DELETE ]
+    ::Magnets::Path.new( :name ).request_method.delete.should == [ :DELETE ]
   end
 
-	###########################
-  #  delete_request_method  #
-  ###########################
-
-  it 'can remove a method that has previously been permitted' do
-    ::Magnets::Path.new( :name ).instance_eval do
-      request_methods.should == []
-      request_method( :PUT )
-      request_methods.should == [ :PUT ]
-      delete_request_method( :PUT )
-      request_methods.should == []
-      request_method( :PUT )
-      request_methods.should == [ :PUT ]
-      delete_request_method( :put )
-      request_methods.should == []
-    end
-  end
-  
 	##############
   #  host      #
   #  hostname  #
@@ -227,10 +215,10 @@ describe ::Magnets::Request do
 
   it 'can declare an additional basepath for matching viewpath routes (no default basepath)' do
     ::Magnets::Path.new( :name ).instance_eval do
-      basepaths.is_a?( Array ).should == true
+      basepaths.is_a?( ::Array ).should == true
       basepaths.empty?.should == true
       basepath( 'root', :some_path )
-      basepaths[ 0 ].is_a?( Array ).should == true
+      basepaths[ 0 ].is_a?( ::Array ).should == true
       basepaths[ 0 ][ 0 ].is_a?( ::Magnets::Path::PathPart::Constant ).should == true
       basepaths[ 0 ][ 1 ].is_a?( ::Magnets::Path::PathPart::Variable ).should == true
     end
@@ -242,10 +230,10 @@ describe ::Magnets::Request do
 
   it 'can declare an additional path (no default path)' do
     ::Magnets::Path.new( :name ).instance_eval do
-      paths.is_a?( Array ).should == true
+      paths.is_a?( ::Array ).should == true
       paths.empty?.should == true
       path( 'root', :some_path )
-      paths[ 0 ].is_a?( Array ).should == true
+      paths[ 0 ].is_a?( ::Array ).should == true
       paths[ 0 ][ 0 ].is_a?( ::Magnets::Path::PathPart::Constant ).should == true
       paths[ 0 ][ 1 ].is_a?( ::Magnets::Path::PathPart::Variable ).should == true
     end
@@ -257,7 +245,7 @@ describe ::Magnets::Request do
 
   it 'can declare a view to be rendered to the document stack' do
     ::Magnets::Path.new( :name ).instance_eval do
-      render_stack.is_a?( Array ).should == true
+      render_stack.is_a?( ::Array ).should == true
       render_stack.empty?.should == true
       configuration_block = Proc.new do |viewpath, view|
         puts 'viewpath configuration space'
