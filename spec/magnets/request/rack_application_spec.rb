@@ -2,7 +2,6 @@
 require_relative '../../../lib/magnets-request.rb'
 
 require 'persistence'
-require 'persistence-adapter-mock'
 
 require 'rack/mock'
 
