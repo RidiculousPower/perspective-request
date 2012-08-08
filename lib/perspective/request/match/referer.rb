@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::Match::Referer
+module ::Perspective::Request::Match::Referer
 
 	###########
   #  match  #

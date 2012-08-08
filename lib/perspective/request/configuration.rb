@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::Configuration
+module ::Perspective::Request::Configuration
 
   ##############
   #  root      #

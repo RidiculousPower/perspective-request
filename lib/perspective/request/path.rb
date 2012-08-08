@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::Path
+module ::Perspective::Request::Path
   
   include ::CascadingConfiguration::Array::Sorted::Unique
   

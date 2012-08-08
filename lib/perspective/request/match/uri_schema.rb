@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::Match::URISchema
+module ::Perspective::Request::Match::URISchema
 
 	###########
   #  match  #

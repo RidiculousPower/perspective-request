@@ -1,14 +1,14 @@
 
-require_relative '../../../lib/magnets-request.rb'
+require_relative '../../../lib/perspective/request.rb'
 
 require 'persistence'
 
 require 'rack/mock'
 
-describe ::Magnets do
+describe ::Perspective do
 
   before :all do
-    class ::Magnets::Mock
+    class ::Perspective::Mock
       def to_html
         return 'Hello World!'
       end
@@ -19,9 +19,9 @@ describe ::Magnets do
     
     ::Persistence.enable_port( :mock, ::Persistence::Adapter::Mock.new )
 
-    ::Magnets.root = ::Magnets::Mock
+    ::Perspective.root = ::Perspective::Mock
 
-    mock_request = ::Rack::MockRequest.new( ::Magnets )
+    mock_request = ::Rack::MockRequest.new( ::Perspective )
     
     mock_response = mock_request.get( 'path/to/somewhere' )
 

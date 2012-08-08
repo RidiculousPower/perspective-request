@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::RackApplication
+module ::Perspective::Request::RackApplication
 
   attr_reader :request
 
@@ -21,7 +21,7 @@ module ::Magnets::Request::RackApplication
 	  
 	  return @application ||= lambda do |environment|
 
-  	  @request = ::Magnets::Request.new( ::Rack::Request.new( environment ) )
+  	  @request = ::Perspective::Request.new( ::Rack::Request.new( environment ) )
 
   	  return rack_response
 
@@ -44,7 +44,7 @@ module ::Magnets::Request::RackApplication
     
     @content = 'Redirecting!'
 		@status = 301
-		::Magnets::Request::Headers[ 'Location' ] = destination
+		::Perspective::Request::Headers[ 'Location' ] = destination
         
     return self
         
@@ -56,7 +56,7 @@ module ::Magnets::Request::RackApplication
   
   def root
     
-    return ::Magnets::Configuration.request.root
+    return ::Perspective::Configuration.request.root
     
   end
 
@@ -67,7 +67,7 @@ module ::Magnets::Request::RackApplication
   
   def root=( root_class )
     
-    return ::Magnets::Configuration.request.root = root_class
+    return ::Perspective::Configuration.request.root = root_class
     
   end
   alias_method  :set_root, :root=
@@ -78,7 +78,7 @@ module ::Magnets::Request::RackApplication
   
   def root_instance
     
-    return ::Magnets::Configuration.request.root_instance
+    return ::Perspective::Configuration.request.root_instance
     
   end
 
@@ -89,7 +89,7 @@ module ::Magnets::Request::RackApplication
   
   def root_instance=( root_instance )
     
-    return ::Magnets::Configuration.request.root_instance = root_instance
+    return ::Perspective::Configuration.request.root_instance = root_instance
     
   end
   alias_method  :set_root_instance, :root_instance=
@@ -122,7 +122,7 @@ module ::Magnets::Request::RackApplication
   
   def initialize_headers
     
-    ::Magnets::Request::Headers.clear
+    ::Perspective::Request::Headers.clear
     
   end
   
@@ -142,7 +142,7 @@ module ::Magnets::Request::RackApplication
   
   def initialize_status
     
-		::Magnets::Request::Headers[ 'Content-Type' ] = 'text/html'
+		::Perspective::Request::Headers[ 'Content-Type' ] = 'text/html'
 		
 		@status = 200
     
@@ -164,7 +164,7 @@ module ::Magnets::Request::RackApplication
 	
   def finish_response
     
-    return ::Rack::Response.new( @content, @status, ::Magnets::Request::Headers ).finish
+    return ::Rack::Response.new( @content, @status, ::Perspective::Request::Headers ).finish
     
   end
   

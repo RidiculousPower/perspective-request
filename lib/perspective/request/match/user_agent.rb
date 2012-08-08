@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::Match::UserAgent
+module ::Perspective::Request::Match::UserAgent
 
 	###########
   #  match  #

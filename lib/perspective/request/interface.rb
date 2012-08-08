@@ -1,5 +1,5 @@
 
-module ::Magnets::Request::Interface
+module ::Perspective::Request::Interface
   
   include ::CascadingConfiguration::Array::Sorted::Unique
 
@@ -11,7 +11,7 @@ module ::Magnets::Request::Interface
     
     @rack_request = rack_request
     
-    @request_path = ::Magnets::Path::RequestPath.new( rack_request.path_info )
+    @request_path = ::Perspective::Request::Path::RequestPath.new( rack_request.path_info )
     
   end
   

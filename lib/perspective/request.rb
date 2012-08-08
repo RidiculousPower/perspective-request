@@ -1,7 +1,7 @@
 
 begin ; require 'development' ; rescue ::LoadError ; end
 
-require 'magnets/path'
+require 'perspective/path'
 
 # namespaces that have to be declared ahead of time for proper load order
 require_relative './namespaces'
@@ -12,9 +12,9 @@ require_relative './requires.rb'
 # post-require setup
 require_relative './setup.rb'
 
-class ::Magnets::Request
+class ::Perspective::Request
   
-  include ::Magnets::Request::Interface
+  include ::Perspective::Request::Interface
   
   Headers = { } 
   
